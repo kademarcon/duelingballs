@@ -1,0 +1,175 @@
+body{
+    font-family: sans-serif;
+    image-rendering: pixelated;
+}
+
+h1{
+    background-color: rgb(241, 227, 208);
+}
+#gameTitle{
+    margin-top: 100px;
+    color: rgb(63, 36, 11);
+    text-align: center;
+    padding: 10px;
+    font-size: 2em;
+}
+
+#topRow {
+    overflow: hidden;
+    border-radius: 15px;
+    border: 4px solid rgb(219, 163, 126);
+}
+
+body {
+    user-select: none;
+}
+
+.colContainer{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rowContainer{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+}
+
+#juiceMeter{
+    border: 4px solid rgb(36, 33, 33);
+    border-radius: 25px;
+    overflow: hidden;
+    height: 265px;
+    width: 60px;
+    background-color: rgb(95, 95, 95);
+    margin-right: 20px;
+    position: relative;
+}
+
+#juiceLevel{
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1.5em;
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+#juice {
+    display: flex;
+    height: 265px;
+    width: 60px;
+    background-color: rgb(230, 55, 42);
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
+}
+
+#skeleton{
+    border: 8px solid rgb(36, 33, 33);
+    box-sizing: border-box; 
+    overflow: hidden;
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
+    background-color: rgb(219, 219, 219);
+    margin-bottom: 20px;
+    position: relative;
+    display: flex;
+}
+
+#skeletonJuice{
+    display: flex;
+    height: 0px;
+    width: 150px;
+    background-color: rgb(230, 55, 42);
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
+}
+
+#skeletonLevel{
+    margin: auto;
+    font-size: 100px;
+    position: relative;
+    z-index: 2;
+}
+
+#pumpButton{
+    border-radius: 10px;
+    height: 100px;
+    width: 200px;
+    background-color: rgb(255, 102, 0);
+    display: flex;
+}
+
+#pumpText {
+    margin: auto;
+    font-size: 3em;
+    font-weight: bold;
+    color:#ffcfbc
+}
+
+#creatorDiv{
+    height:340px;
+    width:340px;
+    background-color: rgb(255, 242, 226);
+}
+
+#spawnDiv{
+    height:340px;
+    width:340px;
+    background-color: bisque;
+    position: relative;
+}
+
+#ballCounter {
+    left: 15px;
+    position: absolute;
+    bottom: 15px;
+    font-size: 1.5em;
+}
+
+.ball {
+    position: absolute;
+    border-radius: 50%; /* Make them circular */
+    background-color: rgb(230, 55, 42); /* Red balls for visibility */
+    transition: all 0.3s ease; /* Smooth transition for movement */
+}
+
+.helpLink{
+    padding-left: 10px;
+    color: green;
+    display: inline-block;
+    font-size: 1.5em;
+}
+
+.helpLink:hover {
+    font-weight: bold;
+}
+
+.denyLink{
+    padding-left: 10px;
+    color: maroon;
+    display: inline-block;
+    font-size: 1.5em;
+}
+
+.denyLink:hover {
+    font-weight: bold;
+}
+
+#chatBox {
+    padding: 20px;
+    overflow: auto;
+    position: sticky;
+    bottom: 0;
+    background-color: aliceblue;
+    height: 200px;
+    width: vw;
+    z-index: 10;
+    border-top: 8px solid rgb(168, 168, 194);
+}
