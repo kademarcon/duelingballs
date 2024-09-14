@@ -9,7 +9,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
-    <p>First commit test</p>
     <div class="colContainer">
         <h1 id="gameTitle">Dueling Balls v0.0.1</h1>
 
@@ -30,7 +29,9 @@
                 </div>
             </div>
             <div id="spawnDiv">
-                <p id="ballCounter">Balls: 0</p>
+                <p id="liveBallCounter">Live: 0</p>
+                <p id="deadBallCounter">Dead: 0</p>
+                <p id="totalBallCounter">Total: 0</p>
             </div>
 
 
@@ -39,8 +40,9 @@
         <button onclick="generateBall()">Make Ball</button>
         <button onclick="changeSlap()">Change Slap</button>
         <button onclick="newMessage()">Message</button>
+        <button onclick="saveProgress()">Save</button>
+        <button onclick="loadProgress()">Load</button>
     </div>
-
     <div style="height: 1000px"></div>
     <div id="chatBox"></div>
 

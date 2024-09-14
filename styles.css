@@ -124,20 +124,22 @@ body {
     width:340px;
     background-color: bisque;
     position: relative;
+    display: flex;
 }
 
-#ballCounter {
-    left: 15px;
-    position: absolute;
-    bottom: 15px;
+#spawnDiv p {
+    margin-top:auto;
     font-size: 1.5em;
+    margin-left: 15px;
+    margin-bottom: 15px;
 }
+
 
 .ball {
     position: absolute;
     border-radius: 50%; /* Make them circular */
     background-color: rgb(230, 55, 42); /* Red balls for visibility */
-    transition: all 0.3s ease; /* Smooth transition for movement */
+    transition: all 0.3s ease;
 }
 
 .helpLink{
@@ -168,7 +170,7 @@ body {
     position: sticky;
     bottom: 0;
     background-color: aliceblue;
-    height: 200px;
+    height: 100px;
     width: vw;
     z-index: 10;
     border-top: 8px solid rgb(168, 168, 194);
