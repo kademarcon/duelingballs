@@ -8,43 +8,44 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
-<body>
-    <div class="colContainer">
-        <h1 id="gameTitle">Dueling Balls v0.0.1</h1>
+<body id="hidden-on-load">
+    <p id="version">v0.0.2</p>
+    <div class="col-container">
+        <h1 id="game-title">Dueling Balls</h1>
 
-        <div id="topRow" class="rowContainer">
-            <div class="rowContainer" id="creatorDiv">
-                <div id="juiceMeter">
+        <div id="stage-one" class="row-container">
+            <div class="row-container" id="creator-div">
+                <div id="juice-meter">
                     <div id="juice"></div>
-                    <p id="juiceLevel">100</p>
+                    <p id="juice-level">100</p>
                 </div>
-                <div class="colContainer">
+                <div class="col-container">
                     <div id="skeleton">
-                        <div id="skeletonJuice"></div>
-                        <p id="skeletonLevel">0</p>
+                        <div id="skeleton-juice"></div>
+                        <p id="skeleton-level">0</p>
                     </div>
-                    <div id="pumpButton">
-                        <p id="pumpText">PUMP</p>
+                    <div id="pump-button">
+                        <p id="pump-text">PUMP</p>
                     </div>
                 </div>
             </div>
-            <div id="spawnDiv">
-                <p id="liveBallCounter">Live: 0</p>
-                <p id="deadBallCounter">Dead: 0</p>
-                <p id="totalBallCounter">Total: 0</p>
+            <div id="spawn-div">
+                <p class="ball-counter" id="stage-two-ball-counter">Stage 2: 0</p>
+                <p class="ball-counter" id="dead-ball-counter">Killed: 0</p>
+                <p class="ball-counter" id="total-ball-counter">Total: 0</p>
             </div>
 
 
         </div>
-        <p style="margin-top: 25px">Developer Buttons:</p>
-        <button onclick="generateBall()">Make Ball</button>
-        <button onclick="changeSlap()">Change Slap</button>
-        <button onclick="newMessage()">Message</button>
-        <button onclick="saveProgress()">Save</button>
-        <button onclick="loadProgress()">Load</button>
+        <div id="button-container" class="row-container">
+            <button onclick="generateNewBall()">Make Ball</button>
+            <button onclick="saveProgress()">Save</button>
+            <button onclick="resetProgress()">Reset</button>
+        </div>
+
     </div>
-    <div style="height: 1000px"></div>
-    <div id="chatBox"></div>
+
+    
 
     <script src="index.js"></script>
 </body>

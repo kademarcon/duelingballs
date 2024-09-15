@@ -1,12 +1,14 @@
 body{
     font-family: sans-serif;
     image-rendering: pixelated;
+    user-select: none;
+    position: relative;
 }
 
 h1{
     background-color: rgb(241, 227, 208);
 }
-#gameTitle{
+#game-title{
     margin-top: 100px;
     color: rgb(63, 36, 11);
     text-align: center;
@@ -14,31 +16,32 @@ h1{
     font-size: 2em;
 }
 
-#topRow {
+#stage-one {
     overflow: hidden;
     border-radius: 15px;
     border: 4px solid rgb(219, 163, 126);
 }
 
-body {
-    user-select: none;
+#button-container{
+    margin-top: 10px;
+    gap:5px;
 }
 
-.colContainer{
+.col-container{
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
 }
 
-.rowContainer{
+.row-container{
     display: flex;
     justify-content: center;
     flex-direction: row;
     align-items: center;
 }
 
-#juiceMeter{
+#juice-meter{
     border: 4px solid rgb(36, 33, 33);
     border-radius: 25px;
     overflow: hidden;
@@ -49,7 +52,7 @@ body {
     position: relative;
 }
 
-#juiceLevel{
+#juice-level{
     text-align: center;
     margin-top: 10px;
     font-size: 1.5em;
@@ -81,7 +84,7 @@ body {
     display: flex;
 }
 
-#skeletonJuice{
+#skeleton-juice{
     display: flex;
     height: 0px;
     width: 150px;
@@ -91,14 +94,14 @@ body {
     z-index: 1;
 }
 
-#skeletonLevel{
+#skeleton-level{
     margin: auto;
     font-size: 100px;
     position: relative;
     z-index: 2;
 }
 
-#pumpButton{
+#pump-button{
     border-radius: 10px;
     height: 100px;
     width: 200px;
@@ -106,20 +109,20 @@ body {
     display: flex;
 }
 
-#pumpText {
+#pump-text {
     margin: auto;
     font-size: 3em;
     font-weight: bold;
     color:#ffcfbc
 }
 
-#creatorDiv{
+#creator-div{
     height:340px;
     width:340px;
     background-color: rgb(255, 242, 226);
 }
 
-#spawnDiv{
+#spawn-div{
     height:340px;
     width:340px;
     background-color: bisque;
@@ -127,9 +130,9 @@ body {
     display: flex;
 }
 
-#spawnDiv p {
+.ball-counter {
     margin-top:auto;
-    font-size: 1.5em;
+    font-size: 1.25em;
     margin-left: 15px;
     margin-bottom: 15px;
 }
@@ -139,39 +142,61 @@ body {
     position: absolute;
     border-radius: 50%; /* Make them circular */
     background-color: rgb(230, 55, 42); /* Red balls for visibility */
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
+    display: flex;
 }
 
-.helpLink{
+.ball p{
+    margin: auto;
+}
+
+.help-link{
     padding-left: 10px;
     color: green;
     display: inline-block;
     font-size: 1.5em;
 }
 
-.helpLink:hover {
+.help-link:hover {
     font-weight: bold;
 }
 
-.denyLink{
+#version{
+    position: sticky;
+    top: 5px;
+    left: 5px;
+    display: inline-block;
+    color: gray;
+}
+
+.deny-link{
     padding-left: 10px;
     color: maroon;
     display: inline-block;
     font-size: 1.5em;
 }
 
-.denyLink:hover {
+.deny-link:hover {
     font-weight: bold;
 }
 
-#chatBox {
-    padding: 20px;
-    overflow: auto;
-    position: sticky;
-    bottom: 0;
-    background-color: aliceblue;
+#hidden-on-load{
+    visibility: hidden;
+}
+
+.death-message{
+    color:red;
+    opacity: 1;
+    transition: all 0.5s ease 0.5s, bottom 1s linear;
+    display: flex;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+}
+
+#chat-box {
+    display: flex;
+    flex-direction: column;
     height: 100px;
-    width: vw;
-    z-index: 10;
-    border-top: 8px solid rgb(168, 168, 194);
+    z-index: 9;
 }
