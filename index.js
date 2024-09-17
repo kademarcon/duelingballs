@@ -29,7 +29,7 @@ function sound(src) {
   }
 }
 
-const failSound = new Audio("./sound/fail.wav");
+
 const pumpSound = new Audio("./sound/thud.wav");
 const successSound = new sound("./sound/success.wav");
 const water1 = new sound("./sound/water3.wav");
@@ -68,6 +68,7 @@ const waterArr = [water2, water2, water2];
 
 pumpButton.addEventListener("click", function() {
     if (pumpState == false && game.juiceLevel >= 5 && game.skeletonLevel != 3) {
+        pumpButton.style.cursor = 'auto'; 
         pumpButton.style.backgroundColor = "sienna";
         switchSound.play();
         pumpState = true;
@@ -80,8 +81,14 @@ pumpButton.addEventListener("click", function() {
             document.getElementById('juice-level').innerHTML = game.juiceLevel;
             attempts--;
             if(attempts == 0){
-              pumpButton.style.backgroundColor = "rgb(255, 102, 0)";
               game.skeletonLevel++;
+              if(game.skeletonLevel==3){
+                skeletonButton.style.cursor = 'pointer'; 
+                pumpButton.style.cursor = 'auto';               
+              } else{
+                pumpButton.style.backgroundColor = "rgb(255, 102, 0)";
+                pumpButton.style.cursor = 'pointer';  
+              }
               waterArr[Math.floor(Math.random() * 3)].play();
               document.getElementById('skeleton-juice').style.height = 150*game.skeletonLevel/3 + "px";
               document.getElementById('skeleton-level').innerHTML = game.skeletonLevel;
@@ -91,6 +98,7 @@ pumpButton.addEventListener("click", function() {
             if(game.juiceLevel < game.juicePerAttempt){
               pumpState = false;
               pumpButton.style.backgroundColor = "rgb(255, 102, 0)";
+              pumpButton.style.cursor = 'pointer';  
               clearInterval(interval);
             }
         }, 500);
@@ -112,21 +120,16 @@ function generateNewBall(){
 
 skeletonButton.addEventListener("click", function() {
   if(game.skeletonLevel == 3 && generateNewBall()){
+    skeletonButton.style.cursor = 'auto'; 
     game.skeletonLevel = 0;
     document.getElementById("skeleton-juice").style.height = "0px";
     document.getElementById("skeleton-level").innerHTML = game.skeletonLevel;
-  }
-  else{
-    failSound.load();
-    failSound.play();
+    pumpButton.style.backgroundColor = "rgb(255, 102, 0)";
+    pumpButton.style.cursor = 'pointer';  
   }
 });
 
 juiceButton.addEventListener('click', function() {
-  if(game.juiceLevel >= 100){
-    failSound.play();
-    return;
-  }
   const random = Math.floor(Math.random() * 3);
   sqArr[random].load();
   sqArr[random].play();
@@ -262,8 +265,8 @@ window.onload = function() {
   const savedState = localStorage.getItem('game');
   if (savedState) {
     game = JSON.parse(savedState);
-    updateEverything();
   }
+  updateEverything();
   document.getElementById('hidden-on-load').style.visibility = 'visible';
 }
 
