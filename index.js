@@ -1,6 +1,9 @@
 let game = {
   skeletonLevel: 0,
-  juiceLevel: 100,
+  skeletonPurity: 1,
+  juiceBucketLevel: 50,
+  waterVolumeLevel: 0,
+  skeletonFillRatio: 1,
   totalStageOneBalls: 0, 
   totalStageTwoBalls: 0, 
   totalDeadBalls: 0, 
@@ -10,7 +13,18 @@ let game = {
 
 const pumpButton = document.getElementById('pump-button');
 const skeletonButton = document.getElementById('skeleton');
-const juiceButton = document.getElementById('juice-meter');
+const skeletonJuice = document.getElementById('skeleton-juice');
+const juiceBucket = document.getElementById('juice-bucket');
+const juiceVolume = document.getElementById('juice-volume');
+const waterVolume = document.getElementById('water-volume');
+const valveHandle = document.getElementById('valve-handle');
+const screwHandle = document.getElementById('screw-handle');
+const screw = document.getElementById('screw');
+const screwHandleFace = document.getElementById('screw-handle-face');
+const press = document.getElementById('press');
+
+
+
 let pumpState = false;
 
 function sound(src) {
@@ -66,19 +80,88 @@ const deepwhoo = new Audio("./sound/deepwhoo.wav");
 const switchSound = new sound("./sound/switch.wav");
 const waterArr = [water2, water2, water2];
 
+let valveClicked = false;
+let waterIncrease = 10;
+valveHandle.addEventListener('click', function(){
+  if(!valveClicked && game.waterVolumeLevel != 100){
+    valveHandle.style.cursor = 'auto';
+    valveClicked = true;
+    valveHandle.style.transform = `rotate(180deg)`;
+    setTimeout(function(){
+      valveHandle.style.cursor = 'pointer';
+      valveHandle.style.transform = `rotate(0deg)`;
+      if(game.waterVolumeLevel == 100){
+        valveHandle.style.cursor = 'auto';
+      }
+      valveClicked = false;
+    },1000); 
+    if(game.waterVolumeLevel < 100 - waterIncrease) {
+      game.waterVolumeLevel += waterIncrease;
+    }
+    else{
+      waterIncrease = 100 - game.waterVolumeLevel;
+      game.waterVolumeLevel += waterIncrease;
+    }
+    waterVolume.style.height = game.waterVolumeLevel + "%";
+  }
+});
+
+let screwClicked = false;
+let screwProfile = false;
+let screwDecrease = 9;
+let screwHeight = 0;
+screwHandle.addEventListener('click', function(){
+  if(!screwClicked && screwHeight != 90){
+    screwHandle.style.cursor = 'auto';
+    screwClicked = true;
+    screw.classList.add('screw-animation');
+    if(!screwProfile){
+      screwHandle.style.transform = `scale(0.35, 1)`; 
+      screwHandleFace.style.right = `${0}%`;
+      screwHandleFace.style.left = 'auto';
+      screwHandleFace.style.width = `${100}%`;
+      screwHandleFace.style.transition = 'width 0.2s ease-in';
+    } else {
+      screwHandle.style.transform = `scale(1, 1)`;
+      screwHandleFace.style.left = `${0}%`;
+      screwHandleFace.style.right = 'auto';
+      screwHandleFace.style.width = `${0}%`;
+      screwHandleFace.style.transition = 'width 0.2s ease-out';
+    }
+    screwProfile = !screwProfile;
+    setTimeout(function(){
+      screwHandle.style.cursor = 'pointer';
+      if(screwHeight == 90){
+        screwHandle.style.cursor = 'auto';
+      }
+      screw.classList.remove('screw-animation');
+      screwClicked = false;
+    },200); 
+    if(screwHeight < 90 - screwDecrease) {
+      screwHeight += screwDecrease;
+    }
+    else{
+      screwDecrease = 90 - screwHeight;
+      screwHeight += screwDecrease;
+    }
+    press.style.top = `${screwHeight}px`;
+  }
+});
+
+
 pumpButton.addEventListener("click", function() {
-    if (pumpState == false && game.juiceLevel >= 5 && game.skeletonLevel != 3) {
+    if (pumpState == false && game.juiceBucketLevel >= 5 && game.skeletonLevel != 3) {
         pumpButton.style.cursor = 'auto'; 
         pumpButton.style.backgroundColor = "sienna";
         switchSound.play();
         pumpState = true;
 
-        let attempts = 1 + Math.floor(Math.random() * 6) // 1-6
+        let attempts = 2 + Math.floor(Math.random() * 4) // 2-5
         const interval = setInterval(function() {
-            game.juiceLevel -= game.juicePerAttempt;
+            game.juiceBucketLevel -= game.juicePerAttempt;
             pumpSound.play();
-            document.getElementById('juice').style.height = 265*game.juiceLevel/100 + "px";
-            document.getElementById('juice-level').innerHTML = game.juiceLevel;
+            juiceVolume.style.height = game.juiceBucketLevel + "%";
+            //document.getElementById('juice-level').innerHTML = game.juiceLevel;
             attempts--;
             if(attempts == 0){
               game.skeletonLevel++;
@@ -90,12 +173,15 @@ pumpButton.addEventListener("click", function() {
                 pumpButton.style.cursor = 'pointer';  
               }
               waterArr[Math.floor(Math.random() * 3)].play();
-              document.getElementById('skeleton-juice').style.height = 150*game.skeletonLevel/3 + "px";
-              document.getElementById('skeleton-level').innerHTML = game.skeletonLevel;
+              skeletonJuice.style.height =50*game.skeletonLevel/3 + "px";
+              
+              game.skeletonPurity = (game.juiceBucketPurity + game.skeletonPurity * (game.skeletonLevel-1))/game.skeletonLevel;
+              skeletonJuice.style.backgroundColor =  `color-mix(in hsl, rgb(165, 165, 165,0.5), rgba(230, 55, 42) ${100*game.skeletonPurity}%)`;
+
               pumpState = false;
               clearInterval(interval);
             }
-            if(game.juiceLevel < game.juicePerAttempt){
+            if(game.juiceBucketLevel < game.juicePerAttempt){
               pumpState = false;
               pumpButton.style.backgroundColor = "rgb(255, 102, 0)";
               pumpButton.style.cursor = 'pointer';  
@@ -122,13 +208,14 @@ skeletonButton.addEventListener("click", function() {
   if(game.skeletonLevel == 3 && generateNewBall()){
     skeletonButton.style.cursor = 'auto'; 
     game.skeletonLevel = 0;
+    game.skeletonPurity = 1;
     document.getElementById("skeleton-juice").style.height = "0px";
-    document.getElementById("skeleton-level").innerHTML = game.skeletonLevel;
     pumpButton.style.backgroundColor = "rgb(255, 102, 0)";
     pumpButton.style.cursor = 'pointer';  
   }
 });
 
+/*
 juiceButton.addEventListener('click', function() {
   const random = Math.floor(Math.random() * 3);
   sqArr[random].load();
@@ -140,6 +227,7 @@ juiceButton.addEventListener('click', function() {
   document.getElementById("juice").style.height = 265*game.juiceLevel/100 + "px";
   document.getElementById("juice-level").innerHTML = game.juiceLevel;
 });
+*/
 
 
 const maxStageOneBalls = 10;
@@ -271,10 +359,7 @@ window.onload = function() {
 }
 
 function updateEverything(){
-  document.getElementById('juice').style.height = 265*game.juiceLevel/100 + "px";
-  document.getElementById('juice-level').innerHTML = game.juiceLevel;
   document.getElementById('skeleton-juice').style.height = 150*game.skeletonLevel/3 + "px";
-  document.getElementById('skeleton-level').innerHTML = game.skeletonLevel;
   document.getElementById('dead-ball-counter').innerHTML = "Dead: " + game.totalDeadBalls;
   document.getElementById('stage-two-ball-counter').innerHTML = "Stage 2: " + game.totalStageTwoBalls;
   document.getElementById('total-ball-counter').innerHTML = "Total: " + game.totalBalls;
@@ -296,9 +381,6 @@ function showDeath(string){
   setTimeout(() => {
     msg.remove();
   }, 1000);
-
-  //if(isScrolledToBottom) out.scrollTop = out.scrollHeight - out.clientHeight;
-  //const isScrolledToBottom = out.scrollHeight - out.clientHeight <= out.scrollTop + 1; 
 }
 
 

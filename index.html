@@ -9,7 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body id="hidden-on-load">
-    <p id="version">v0.0.2</p>
+    <p id="version">v0.0.3</p>
     <div class="col-container">
         <h1 id="game-title">Dueling Balls</h1>
         <div id="tab-container" class="row-container">
@@ -19,19 +19,37 @@
         </div>
         <div id="stage-one" class="row-container">
             <div class="row-container" id="creator-div">
-                <div id="juice-meter">
-                    <div id="juice"></div>
-                    <p id="juice-level">100</p>
-                </div>
                 <div class="col-container">
+                    <div id="screw-holder"></div>
+                    <div id="press-bucket">
+                        <div id="press">
+                            <div id="screw">
+                                <div id="screw-handle">
+                                    <div id="screw-handle-face"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="corpse-volume"></div>
+                    </div>
+                </div>
+                <div id="pipe"></div>
+                <div class="col-container">
+                    <div id="water-pump">
+                        <div id="valve-handle">
+                        </div>
+                    </div>
+    
+                    <div id="juice-bucket">
+                        <div id="divider"></div>
+                        <div id="juice-volume"></div>
+                        <div id="water-volume"></div>
+                    </div>
+                    <div class="trapezoid"></div>
+                    <div id="pump-button"></div>
                     <div id="skeleton">
                         <div id="skeleton-juice"></div>
-                        <p id="skeleton-level">0</p>
                     </div>
-                    <div id="pump-button">
-                        <p id="pump-text">PUMP</p>
                     </div>
-                </div>
             </div>
             <div id="spawn-div">
                 <p class="ball-counter" id="stage-two-ball-counter">Stage 2: 0</p>
@@ -39,34 +57,6 @@
                 <p class="ball-counter" id="total-ball-counter">Total: 0</p>
             </div>
 
-        </div>
-        <div id="stage-two" class="row-container">
-            <div id="press-div" class="row-container">
-
-                <div class="col-container">
-                <div id="water-pump">
-                    <div id="valve-handle">
-                    </div>
-                </div>
-
-                <div id="juice-bucket">
-                    <div id="juice-volume"></div>
-                </div>
-
-                </div>
-                <div id="pipe"></div>
-
-                <div id="press-bucket">
-                    <div id="press"></div>
-                    <div id="corpse-volume"></div>
-                </div>
-
-                
-
-            </div>
-            <div id="mine-div">
-
-            </div>
         </div>
         <div id="button-container" class="row-container">
             <button onclick="generateNewBall()">Make Ball</button>

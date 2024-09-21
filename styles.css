@@ -2,7 +2,6 @@ body{
     font-family: sans-serif;
     image-rendering: pixelated;
     user-select: none;
-    position: relative;
 }
 
 
@@ -15,13 +14,14 @@ body{
 }
 
 #stage-one {
-    width:700px;
-    height:350px;
+    width:1000px;
+    height:500px;
     overflow: hidden;
     border: solid;
     border-width: 0px 4px;
     border-color: rgb(219, 163, 126);
 }
+
 
 #stage-two {
     width:700px;
@@ -32,7 +32,7 @@ body{
     background-color: rgb(117, 117, 117);
     width:20px;
     height:80px;
-
+    margin-left: 60%;
 }
 
 #valve-handle{
@@ -43,13 +43,26 @@ body{
     top:15px;
     right: 10px;
     cursor: pointer;  
+    transition: transform 0.2s linear;
 }
 
-#press-div{
-    background-color: rgb(214, 214, 214);
-    width:50%;
-    height:350px;
+#divider {
+    background-color: rgb(117, 117, 117);
+    margin-left: auto;
+    margin-right: auto;
+    width:10px;
+    height:100%; 
+    z-index : 2;
 }
+
+.trapezoid {
+	border-top: 50px solid #555;
+	border-left: 50px solid transparent;
+	border-right: 50px solid transparent;
+	height: 0;
+	width: 50px;
+}
+
 
 #pipe{
     background-color: rgb(117, 117, 117);
@@ -61,49 +74,128 @@ body{
 
 #press{
     background-color: rgb(75, 75, 75);
-    height:20px;
+    height:15px;
     width: 100%;
-    top: -5px;
-    position: relative;
+    top: 0px;
+    position: absolute;
     margin-left: auto;
     margin-right: auto;
-    cursor: pointer;  
+    transition: top 0.2s linear;
+}
+
+#screw-holder{
+    border: solid;
+    border-color: rgb(97, 97, 97);
+    border-width: 10px 10px 0px 10px;
+    background-color: transparent;
+    width: 140px;
+    height: 10px;
+    position: relative;
+}
+
+#screw{
+    height:130px;
+    width: 20px;
+    left: 72.5px;
+    bottom: 15px;
+    position: absolute;
+    background-attachment: fixed;
+    background: repeating-linear-gradient(
+        23.8deg,
+        rgb(46, 46, 46),
+        rgb(46, 46, 46) 1%,
+        rgb(75, 75, 75) 1.5%,
+        rgb(75, 75, 75) 6%,
+        rgb(46, 46, 46) 6.5%
+    );
+    background-size: 100% 130px;
+}   
+
+.screw-animation{
+    animation: moveDown 0.2s linear;
+}
+
+@keyframes moveDown {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 20px 0;
+    }
+}
+
+#screw-handle{
+    height:15px;
+    width: 80px;
+    right: 30px;
+    bottom: 10px;
+    position: relative;
+    background-color: rgb(97, 97, 97);
+    cursor: pointer;
+    transition: transform 0.2s linear;
+}
+
+#screw-handle-face{
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 0%;
+    background-color: rgb(150, 150, 150);
+    transition: width 0.2s ease-in;
 }
 
 #corpse-volume{
     background-color: rgb(230, 55, 42);
     width:100%;
-    height: 50%;
+    height: 0%;
     bottom: 0;
     position: absolute;
 }
 
-#press-bucket{
-    margin-top: 45px;    
+#press-bucket{  
     border: solid;
     border-color: rgb(117, 117, 117);
-    border-width: 0px 10px 10px 10px;
+    border-width: 10px;
     background-color: rgb(214, 214, 214);
-    width: 105px;
-    height: 165px;
+    width: 165px;
+    height: 105px;
     position: relative;
 }
 
 #juice-volume{
-    background-color: rgba(230, 55, 42, 0.185);
-    width:100%;
+    background-color: rgba(230, 55, 42);
+    width:80px;
     height: 50%;
     bottom: 0;
     position: absolute;
+
+}
+
+#water-volume{
+    background-color: rgb(165, 165, 165,0.5);
+    width:80px;
+    height: 0%;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    transition: height 1.2s linear;
+}
+
+#purity{
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 5;
 }
 
 #juice-bucket{
     border: 10px solid rgb(117, 117, 117);
     background-color: rgb(214, 214, 214);
-    width: 155px;
+    width: 170px;
     height: 190px;
     margin: auto;
     position: relative;
+    display: flex;
 }
 
 
@@ -131,49 +223,16 @@ body{
     justify-content: center;
     flex-direction: row;
     align-items: center;
-
 }
 
-#juice-meter{
-    border: 4px solid rgb(36, 33, 33);
-    border-radius: 25px;
-    overflow: hidden;
-    height: 265px;
-    width: 60px;
-    background-color: rgb(95, 95, 95);
-    margin-right: 20px;
-    position: relative;
-    cursor: pointer;  
-}
-
-#juice-level{
-    text-align: center;
-    margin-top: 10px;
-    font-size: 1.5em;
-    position: relative;
-    z-index: 2;
-    color: white;
-}
-
-#juice {
-    display: flex;
-    height: 265px;
-    width: 60px;
-    background-color: rgb(230, 55, 42);
-    position: absolute;
-    bottom: 0;
-    z-index: 1;
-}
 
 #skeleton{
-    border: 8px solid rgb(36, 33, 33);
-    box-sizing: border-box; 
+    border: 4px solid rgb(36, 33, 33);
     overflow: hidden;
     border-radius: 50%;
-    height: 150px;
-    width: 150px;
+    height: 50px;
+    width: 50px;
     background-color: rgb(219, 219, 219);
-    margin-bottom: 20px;
     position: relative;
     display: flex;
 }
@@ -181,7 +240,7 @@ body{
 #skeleton-juice{
     display: flex;
     height: 0px;
-    width: 150px;
+    width: 50px;
     background-color: rgb(230, 55, 42);
     position: absolute;
     bottom: 0;
@@ -190,37 +249,29 @@ body{
 
 #skeleton-level{
     margin: auto;
-    font-size: 100px;
     position: relative;
     z-index: 2;
 }
 
 #pump-button{
-    border-radius: 10px;
-    height: 100px;
-    width: 200px;
+    height: 30px;
+    width: 25px;
     background-color: rgb(255, 102, 0);
     display: flex;
     cursor: pointer;  
 }
 
-#pump-text {
-    margin: auto;
-    font-size: 3em;
-    font-weight: bold;
-    color:#ffcfbc
-}
 
 #creator-div{
     height: 100%;
-    width:50%;
+    width:70%;
     background-color: rgb(255, 242, 226);
     box-sizing: border-box;
 }
 
 #spawn-div{
     height:100%;
-    width:50%;
+    width:30%;
     background-color: bisque;
     position: relative;
     display: flex;
@@ -290,11 +341,4 @@ body{
     position: fixed;
     bottom: 10px;
     left: 10px;
-}
-
-#chat-box {
-    display: flex;
-    flex-direction: column;
-    height: 100px;
-    z-index: 9;
 }
