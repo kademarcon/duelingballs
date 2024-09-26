@@ -1,19 +1,16 @@
 let game = {
-  skeletonLevel: 0,
   skeletonPurity: 1,
   juiceBucketLevel: 50,
   waterVolumeLevel: 0,
-  skeletonFillRatio: 1,
   totalStageOneBalls: 0, 
   totalStageTwoBalls: 0, 
   totalDeadBalls: 0, 
   totalBalls: 0,
-  juicePerAttempt: 5
+  pumpLevel: 0
 };
 
 const pumpButton = document.getElementById('pump-button');
 const skeletonButton = document.getElementById('skeleton');
-const skeletonJuice = document.getElementById('skeleton-juice');
 const juiceBucket = document.getElementById('juice-bucket');
 const juiceVolume = document.getElementById('juice-volume');
 const waterVolume = document.getElementById('water-volume');
@@ -22,10 +19,106 @@ const screwHandle = document.getElementById('screw-handle');
 const screw = document.getElementById('screw');
 const screwHandleFace = document.getElementById('screw-handle-face');
 const press = document.getElementById('press');
+const ratioButton = document.getElementById('ratio-button');
+const myPopup = document.getElementById('my-popup');
+const closePopup = document.getElementById('close-popup');
+const container = document.getElementById('spawn-div');
 
 
+class Ball {
+  constructor(skeletonPurity) {
+    this.name = names[Math.floor(Math.random() * names.length)];
+    this.onSpawn = false;
+    this.onSkeleton = true;
+    this.skeletonPurity = skeletonPurity;
+    this.element = document.createElement('div');
+    this.purity = skeletonPurity;
+    this.purityElement = document.createElement('div');
+    this.element.classList.add('ball');
+    this.purityElement.classList.add('ball-purity')
+    this.purityElement.innerHTML = `${this.purity}`;
+    skeletonButton.appendChild(this.element);
+    this.element.appendChild(this.purityElement);
+    this.element.style.cursor = 'pointer';
+    this.element.style.backgroundColor = `color-mix(in hsl, rgb(165, 165, 165,0.5), rgba(230, 55, 42) ${100*this.purity}%)`;
 
-let pumpState = false;
+    this.addListeners();
+  }
+
+  addListeners() {
+    /*
+      this.element.addEventListener('mouseenter', () => {
+          this.element.style.backgroundColor = 'blue';
+      }); */
+
+      this.element.addEventListener('click', () => {
+          if(this.onSkeleton && this.findPosition()){
+
+            skeletonButton.style.backgroundColor = 'rgb(219, 219, 219)';
+            pumpButtonClickable = true;
+            pumpButton.style.backgroundColor = "rgb(255, 102, 0)";
+            pumpButton.style.cursor = 'pointer';  
+            container.appendChild(this.element);
+
+
+          }
+      });
+
+      this.element.addEventListener('mousenter', () => {
+        if(this.onSpawn){
+
+        }
+      });
+
+      this.element.addEventListener('mouseleave', () => {
+        this.element.style.backgroundColor = `color-mix(in hsl, rgb(165, 165, 165,0.5), rgba(230, 55, 42) ${100*this.purity}%)`;
+      });
+  }
+
+  findPosition(){
+    if(game.maxStageOneBalls == maxStageOneBalls){
+      return false;
+    }
+
+    const ballDiameter = 50;
+    let validPosition = false;
+    const containerPadding = 15;
+    let x,y;
+    let timesChecked = 0;
+    const containerRect = container.getBoundingClientRect();
+  
+    while(!validPosition){
+      x = containerPadding+ Math.floor(Math.random() * (containerRect.width - ballDiameter - 2*containerPadding));
+      y = containerPadding+ Math.floor(Math.random() * (containerRect.height - ballDiameter - 2*containerPadding));
+      validPosition = true;
+  
+      const existingBalls = document.querySelectorAll('.ball');
+      for(let existingBall of existingBalls){
+        let distance = Math.sqrt((x - parseFloat(existingBall.style.left)) ** 2 + (y - parseFloat(existingBall.style.bottom)) ** 2);
+        if(distance - 8 < ballDiameter) { //adds an 8px margin
+          validPosition = false;
+          break;
+        }
+        timesChecked++;
+      }
+      if(timesChecked>500){ //checks 500 times idk if this is neccessary
+        console.log("Couldn't find ball spawn");
+        return false;
+      }
+    }
+  
+    game.totalBalls++;
+    game.totalStageOneBalls++;
+
+    this.element.style.left = `${x}px`;
+    this.element.style.bottom = `${y}px`;
+
+    return true;
+  }  
+
+
+}
+
 
 function sound(src) {
   this.sound = document.createElement("audio");
@@ -42,6 +135,32 @@ function sound(src) {
     this.sound.pause();
   }
 }
+
+
+ratioButton.addEventListener(
+  "click",
+  function () {
+      myPopup.classList.add("show");
+  }
+);
+closePopup.addEventListener(
+  "click",
+  function () {
+      myPopup.classList.remove(
+          "show"
+      );
+  }
+);
+window.addEventListener(
+  "click",
+  function (event) {
+      if (event.target == myPopup) {
+          myPopup.classList.remove(
+              "show"
+          );
+      }
+  }
+);
 
 
 const pumpSound = new Audio("./sound/thud.wav");
@@ -81,12 +200,14 @@ const switchSound = new sound("./sound/switch.wav");
 const waterArr = [water2, water2, water2];
 
 let valveClicked = false;
-let waterIncrease = 10;
+const waterIncrease = 20;
 valveHandle.addEventListener('click', function(){
-  if(!valveClicked && game.waterVolumeLevel != 100){
+  waterVolume.style.transition = 'height 0.7s linear';
+  if(!valveClicked && game.waterVolumeLevel != 100 && !waterPumping){
     valveHandle.style.cursor = 'auto';
     valveClicked = true;
     valveHandle.style.transform = `rotate(180deg)`;
+
     setTimeout(function(){
       valveHandle.style.cursor = 'pointer';
       valveHandle.style.transform = `rotate(0deg)`;
@@ -94,13 +215,13 @@ valveHandle.addEventListener('click', function(){
         valveHandle.style.cursor = 'auto';
       }
       valveClicked = false;
-    },1000); 
+    },500); 
+
     if(game.waterVolumeLevel < 100 - waterIncrease) {
       game.waterVolumeLevel += waterIncrease;
     }
     else{
-      waterIncrease = 100 - game.waterVolumeLevel;
-      game.waterVolumeLevel += waterIncrease;
+      game.waterVolumeLevel += 100 - game.waterVolumeLevel;
     }
     waterVolume.style.height = game.waterVolumeLevel + "%";
   }
@@ -108,10 +229,11 @@ valveHandle.addEventListener('click', function(){
 
 let screwClicked = false;
 let screwProfile = false;
-let screwDecrease = 9;
+let screwGoingDown = true;
+const screwDecrease = 9;
 let screwHeight = 0;
 screwHandle.addEventListener('click', function(){
-  if(!screwClicked && screwHeight != 90){
+  if(!screwClicked){
     screwHandle.style.cursor = 'auto';
     screwClicked = true;
     screw.classList.add('screw-animation');
@@ -132,65 +254,107 @@ screwHandle.addEventListener('click', function(){
     setTimeout(function(){
       screwHandle.style.cursor = 'pointer';
       if(screwHeight == 90){
-        screwHandle.style.cursor = 'auto';
+        screwGoingDown = false;
+        screwDecrease = -9;
+      }
+      if(screwHeight == 0){
+        screwGoingDown = true;
+        screwDecrease =  9;
       }
       screw.classList.remove('screw-animation');
       screwClicked = false;
     },200); 
-    if(screwHeight < 90 - screwDecrease) {
+    if(!screwGoingDown && screwHeight > 0 + screwDecrease ||screwGoingDown && screwHeight < 90 - screwDecrease) {
       screwHeight += screwDecrease;
     }
     else{
-      screwDecrease = 90 - screwHeight;
-      screwHeight += screwDecrease;
+      if(screwGoingDown){
+        screwDecrease = 90 - screwHeight;
+        screwHeight += screwDecrease;
+      }
+      else{
+        screwDecrease = 0 - screwHeight;
+        screwHeight += screwDecrease; 
+      }
     }
     press.style.top = `${screwHeight}px`;
   }
 });
 
 
+let pumpButtonClickable = true;
+let waterPumping = false;
+const volumeDecrease = 2.5;
 pumpButton.addEventListener("click", function() {
-    if (pumpState == false && game.juiceBucketLevel >= 5 && game.skeletonLevel != 3) {
-        pumpButton.style.cursor = 'auto'; 
-        pumpButton.style.backgroundColor = "sienna";
-        switchSound.play();
-        pumpState = true;
+  if (pumpButtonClickable) {
+    switchSound.play();
+    // set pump unclickable and change appearance
+    pumpButton.style.cursor = 'auto'; 
+    pumpButton.style.backgroundColor = "sienna";
+    pumpButtonClickable = false;
 
-        let attempts = 2 + Math.floor(Math.random() * 4) // 2-5
-        const interval = setInterval(function() {
-            game.juiceBucketLevel -= game.juicePerAttempt;
-            pumpSound.play();
-            juiceVolume.style.height = game.juiceBucketLevel + "%";
-            //document.getElementById('juice-level').innerHTML = game.juiceLevel;
-            attempts--;
-            if(attempts == 0){
-              game.skeletonLevel++;
-              if(game.skeletonLevel==3){
-                skeletonButton.style.cursor = 'pointer'; 
-                pumpButton.style.cursor = 'auto';               
-              } else{
-                pumpButton.style.backgroundColor = "rgb(255, 102, 0)";
-                pumpButton.style.cursor = 'pointer';  
-              }
-              waterArr[Math.floor(Math.random() * 3)].play();
-              skeletonJuice.style.height =50*game.skeletonLevel/3 + "px";
-              
-              game.skeletonPurity = (game.juiceBucketPurity + game.skeletonPurity * (game.skeletonLevel-1))/game.skeletonLevel;
-              skeletonJuice.style.backgroundColor =  `color-mix(in hsl, rgb(165, 165, 165,0.5), rgba(230, 55, 42) ${100*game.skeletonPurity}%)`;
-
-              pumpState = false;
-              clearInterval(interval);
-            }
-            if(game.juiceBucketLevel < game.juicePerAttempt){
-              pumpState = false;
-              pumpButton.style.backgroundColor = "rgb(255, 102, 0)";
-              pumpButton.style.cursor = 'pointer';  
-              clearInterval(interval);
-            }
-        }, 500);
-    }
-
+    let juiceRoll = Math.random();
+    let pumps;
+    if(juiceRoll < 3/8) pumps = 1;
+    else if(juiceRoll < 5/8) pumps = 2;
+    else if(juiceRoll < 7/8) pumps = 3;
+    else pumps = 4;
+    console.log(pumps);
+    game.skeletonPurity = (pumps + game.pumpLevel)/10
+    pumpJuice(pumps, 10 - pumps);
+  }
 });
+
+function pumpJuice(pumps, waterPumps){
+  // when 0 juice pumps left, pump water
+  if(pumps == 0){
+    waterPumping = true;
+    pumpWater(waterPumps);
+    waterPumping = false;
+    return;
+  }
+
+  // if not enough juice, return out
+  if(game.juiceBucketLevel < volumeDecrease){
+    pumpSound.play();
+    // set pump clickable and change appearance
+    pumpButtonClickable = true;
+    pumpButton.style.backgroundColor = "rgb(255, 102, 0)";
+    pumpButton.style.cursor = 'pointer';  
+    return;
+  }
+
+  // nothing caught, decrease juice level and recur function
+  game.juiceBucketLevel -= volumeDecrease;
+  juiceVolume.style.height = game.juiceBucketLevel + "%";
+  setTimeout(() => pumpJuice(pumps - 1, waterPumps), 500);
+}
+
+function pumpWater(waterPumps){
+  waterVolume.style.transition = 'height 0.025s linear';
+  // when 0 water pumps left, create ball
+  if(waterPumps == 0){
+    new Ball(game.skeletonPurity);
+    return;
+  }
+
+  // if not enough water, return out
+  if(game.waterVolumeLevel < volumeDecrease){
+    pumpSound.play();
+    // set pump clickable and change appearance
+    pumpButtonClickable = true;
+    pumpButton.style.backgroundColor = "rgb(255, 102, 0)";
+    pumpButton.style.cursor = 'pointer';  
+    return;
+  }
+
+  // nothing caught, decrease water level and recur function
+  game.waterVolumeLevel -= volumeDecrease;
+  waterVolume.style.height = game.waterVolumeLevel + "%";
+  setTimeout(() => pumpWater(waterPumps - 1), 25);
+}
+
+
 
 function generateNewBall(){
   if(game.totalStageOneBalls < maxStageOneBalls){
@@ -204,37 +368,12 @@ function generateNewBall(){
   return false;
 }
 
-skeletonButton.addEventListener("click", function() {
-  if(game.skeletonLevel == 3 && generateNewBall()){
-    skeletonButton.style.cursor = 'auto'; 
-    game.skeletonLevel = 0;
-    game.skeletonPurity = 1;
-    document.getElementById("skeleton-juice").style.height = "0px";
-    pumpButton.style.backgroundColor = "rgb(255, 102, 0)";
-    pumpButton.style.cursor = 'pointer';  
-  }
-});
-
-/*
-juiceButton.addEventListener('click', function() {
-  const random = Math.floor(Math.random() * 3);
-  sqArr[random].load();
-  sqArr[random].play();
-  game.juiceLevel += 5;
-  if(game.juiceLevel > 100) {
-     game.juiceLevel=100; 
-  }
-  document.getElementById("juice").style.height = 265*game.juiceLevel/100 + "px";
-  document.getElementById("juice-level").innerHTML = game.juiceLevel;
-});
-*/
-
 
 const maxStageOneBalls = 10;
-
 function generateBall() {
   let validPosition = false;
   const ballDiameter = 50;
+
   const containerPadding = 15;
   let x,y;
   let timesChecked = 0;
@@ -247,7 +386,6 @@ function generateBall() {
   ball.style.height = ballDiameter + "px";
   ball.style.width = ballDiameter + "px";
   
-  const container = document.getElementById('spawn-div');
   const containerRect = container.getBoundingClientRect();
 
   while(!validPosition){
@@ -324,10 +462,6 @@ function generateBall() {
       return;
     }
 
-    setTimeout(function() {
-      ball.remove(); 
-    }, 500);
-
     game.totalStageTwoBalls++;
     document.getElementById('stage-two-ball-counter').innerHTML = "Stage 2: " + game.totalStageTwoBalls;
 
@@ -335,8 +469,6 @@ function generateBall() {
     oohArr[randomSound].load();
     oohArr[randomSound].play();
 
-    ball.style.left = (x + 100*((Math.random() * 2)-1) )+ "px";
-    ball.style.bottom = (y - 500) + "px";
   });
 }
 
@@ -359,13 +491,14 @@ window.onload = function() {
 }
 
 function updateEverything(){
-  document.getElementById('skeleton-juice').style.height = 150*game.skeletonLevel/3 + "px";
+  /*
   document.getElementById('dead-ball-counter').innerHTML = "Dead: " + game.totalDeadBalls;
   document.getElementById('stage-two-ball-counter').innerHTML = "Stage 2: " + game.totalStageTwoBalls;
   document.getElementById('total-ball-counter').innerHTML = "Total: " + game.totalBalls;
   for(let i=0; i<game.totalStageOneBalls; i++){
     generateBall();
   }
+    */
 }
 
 function showDeath(string){

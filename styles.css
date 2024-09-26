@@ -10,16 +10,13 @@ body{
     color: rgb(63, 36, 11);
     text-align: center;
     padding: 10px;
-    font-size: 3em;
+    font-size: 4em;
+    font-weight: bold;
 }
 
 #stage-one {
-    width:1000px;
+    width:700px;
     height:500px;
-    overflow: hidden;
-    border: solid;
-    border-width: 0px 4px;
-    border-color: rgb(219, 163, 126);
 }
 
 
@@ -58,15 +55,65 @@ body{
 .trapezoid {
 	border-top: 50px solid #555;
 	border-left: 50px solid transparent;
-	border-right: 50px solid transparent;
 	height: 0;
+	width: 70px;
+    align-self: flex-start;
+}
+
+#pump-pipe{
+    border: solid;
+    border-color: rgb(97, 97, 97);
+    border-width: 0px 15px 15px 0px;
+    background-color: transparent;
+    width: 35px;
+    height: 20px;
+    margin-bottom: auto;
+    margin-right: auto;
+}
+
+#ratio-button{
+    cursor: pointer;
+    background-color: rgb(117, 117, 117);
+	height: 35px;
 	width: 50px;
 }
 
 
+.popup {
+    position: fixed;
+    z-index: 5;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,
+            0,
+            0,
+            0.4);
+    display: none;
+}
+
+.popup-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888888;
+    width: 30%;
+    font-weight: bolder;
+}
+
+.popup-content button {
+    display: block;
+    margin: 0 auto;
+}
+
+.show {
+    display: block;
+}
+
 #pipe{
     background-color: rgb(117, 117, 117);
-    top: 95px;
     width:15px;
     height:10px;
     position: relative;
@@ -168,7 +215,7 @@ body{
     height: 50%;
     bottom: 0;
     position: absolute;
-
+    transition: height 0.025s linear;
 }
 
 #water-volume{
@@ -178,14 +225,7 @@ body{
     bottom: 0;
     right: 0;
     position: absolute;
-    transition: height 1.2s linear;
-}
-
-#purity{
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
-    z-index: 5;
+    transition: height 0.025s linear;
 }
 
 #juice-bucket{
@@ -215,7 +255,6 @@ body{
     justify-content: center;
     flex-direction: column;
     align-items: center;
-
 }
 
 .row-container{
@@ -225,37 +264,25 @@ body{
     align-items: center;
 }
 
-
 #skeleton{
-    border: 4px solid rgb(36, 33, 33);
+    border: 4px solid rgb(117, 117, 117);
     overflow: hidden;
     border-radius: 50%;
     height: 50px;
     width: 50px;
+    margin-top: 5px;
     background-color: rgb(219, 219, 219);
     position: relative;
     display: flex;
 }
 
-#skeleton-juice{
-    display: flex;
-    height: 0px;
-    width: 50px;
-    background-color: rgb(230, 55, 42);
-    position: absolute;
-    bottom: 0;
-    z-index: 1;
-}
-
-#skeleton-level{
+.ball-purity{
     margin: auto;
-    position: relative;
-    z-index: 2;
 }
 
 #pump-button{
-    height: 30px;
-    width: 25px;
+    height: 40px;
+    width: 30px;
     background-color: rgb(255, 102, 0);
     display: flex;
     cursor: pointer;  
@@ -264,14 +291,14 @@ body{
 
 #creator-div{
     height: 100%;
-    width:70%;
+    width:66.7%;
     background-color: rgb(255, 242, 226);
     box-sizing: border-box;
 }
 
 #spawn-div{
     height:100%;
-    width:30%;
+    width:33.3%;
     background-color: bisque;
     position: relative;
     display: flex;
@@ -288,8 +315,10 @@ body{
 
 .ball {
     position: absolute;
-    border-radius: 50%; /* Make them circular */
-    background-color: rgb(230, 55, 42); /* Red balls for visibility */
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background-color: rgb(230, 55, 42);
     transition: all 0.4s ease;
     display: flex;
 }
