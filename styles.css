@@ -276,9 +276,6 @@ body{
     display: flex;
 }
 
-.ball-purity{
-    margin: auto;
-}
 
 #pump-button{
     height: 40px;
@@ -305,12 +302,6 @@ body{
     box-sizing: border-box;
 }
 
-.ball-counter {
-    margin-top:auto;
-    font-size: 1.25em;
-    margin-left: 15px;
-    margin-bottom: 15px;
-}
 
 
 .ball {
@@ -319,12 +310,39 @@ body{
     width: 50px;
     border-radius: 50%;
     background-color: rgb(230, 55, 42);
-    transition: all 0.4s ease;
+    transition: opacity 0.1s ease;
     display: flex;
 }
 
-.ball p{
-    margin: auto;
+@keyframes smoothWave {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
+  .smooth-wave {
+    animation: smoothWave 3s infinite ease-in-out;
+  }
+
+.ball-purity{
+    font-size: 0.75em;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    bottom: 0;
+}
+
+.ball-eyes{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0px;
+    font-size: 1.75em;
 }
 
 #version{
@@ -366,8 +384,7 @@ body{
     color:red;
     opacity: 1;
     transition: all 0.5s ease 0.5s, bottom 1s linear;
-    display: flex;
-    position: fixed;
+    position: absolute;
     bottom: 10px;
     left: 10px;
 }
